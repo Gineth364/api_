@@ -97,7 +97,7 @@ class UsuarioRepository:
                 usuario.celular,
                 usuario.correo,
                 usuario.ciudad,
-                usuario.contraseña,
+                usuario.contrasena,
                 usuario.estado,
                 usuario.direccion,
                 usuario.id_rol
@@ -213,7 +213,7 @@ class UsuarioRepository:
                 usuario.celular,
                 usuario.correo,
                 usuario.ciudad,
-                usuario.contraseña,
+                usuario.contrasena,
                 usuario.estado,
                 usuario.direccion,
                 usuario.id_rol,

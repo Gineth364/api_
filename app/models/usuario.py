@@ -12,6 +12,6 @@ class Usuario(BaseModel):
     direccion: str
     correo: str
     ciudad: str
-    contraseña: str
+    contrasena: str
     estado: bool
 
