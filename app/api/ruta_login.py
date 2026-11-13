@@ -7,7 +7,7 @@ from app.models import Usuario
 
 
 router = APIRouter(
-    prefix="/login",
+    prefix="/auth",
     tags=["Autenticación"]
 )
 
