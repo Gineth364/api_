@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Optional
 from datetime import date
 
@@ -10,7 +10,7 @@ class EvaluacionesFinales(BaseModel):
     tipo_evaluacion: str
     fecha_evaluacion: Optional[date] = None
     resultado: Optional[str] = None
-    calificacion: Optional[float] = None
+    calificacion: Optional[float] = Field(default=None, ge=0)
     cumplimiento_objetivos: Optional[str] = None
     desempeno: Optional[str] = None
     fortalezas: Optional[str] = None
