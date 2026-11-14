@@ -16,7 +16,7 @@ def obtener_puesto(id_puesto: int):
         raise HTTPException(status_code=404, detail="Puesto de practica no encontrado")
     return puesto_practica
 
-@router.post("/")
+@router.post("/", status_code=201)
 def crear_puesto(puestos_practica: Puestos_practica):
     nuevo_id = repo.crear(puestos_practica)
     return {"mensaje": "Puesto registrado exitosamente", "id": nuevo_id}

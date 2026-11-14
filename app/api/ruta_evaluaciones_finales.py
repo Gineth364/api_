@@ -23,7 +23,7 @@ def obtener_evaluacion(id_evaluacion: int):
     return evaluacion
 
 
-@router.post("/")
+@router.post("/", status_code=201)
 def crear_evaluacion(evaluacion: EvaluacionesFinales):
     nuevo_id = repo.crear(evaluacion)
 
