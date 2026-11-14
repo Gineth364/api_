@@ -6,7 +6,7 @@ from datetime import date
 class EvaluacionesFinales(BaseModel):
     id_evaluacion: Optional[int] = None
     id_practica: int
-    id_evaluador: int
+    id_tutor: int
     fecha_evaluacion: date
     resultado: str
     calificacion: float
