@@ -23,7 +23,7 @@ def obtener_postulacion(id_postulacion: int):
 
     return postulacion
 
-@router.post("/")
+@router.post("/", status_code=201)
 def crear_postulacion(postulacion: Postulaciones):
 
     nuevo_id = repo.crear(postulacion)
