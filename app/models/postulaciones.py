@@ -1,13 +1,12 @@
 from pydantic import BaseModel
 from typing import Optional
-from datetime import date
+from datetime import datetime
 
 
 class Postulaciones(BaseModel):
-    id_postulaciones: Optional[int] = None
+    id_postulacion: Optional[int] = None
     id_estudiante: int
     id_puesto: int
-    fecha_postulacion: date
+    fecha_postulacion: datetime
     estado: str
-    comentarios: str
-    
+    comentarios: Optional[str] = None
