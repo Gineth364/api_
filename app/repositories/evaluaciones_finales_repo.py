@@ -85,7 +85,7 @@ class EvaluacionesFinalesRepository:
             query = """
                 INSERT INTO evaluaciones_finales (
                     id_practica,
-                    id_evaluador,
+                    id_tutor,
                     tipo_evaluacion,
                     fecha_evaluacion,
                     resultado,
@@ -107,7 +107,7 @@ class EvaluacionesFinalesRepository:
 
             cursor.execute(query, (
                 evaluaciones_finales.id_practica,
-                evaluaciones_finales.id_evaluador,
+                evaluaciones_finales.id_tutor,
                 evaluaciones_finales.tipo_evaluacion,
                 evaluaciones_finales.fecha_evaluacion,
                 evaluaciones_finales.resultado,
@@ -216,7 +216,7 @@ class EvaluacionesFinalesRepository:
                 UPDATE evaluaciones_finales
                 SET
                     id_practica = %s,
-                    id_evaluador = %s,
+                    id_tutor = %s,
                     tipo_evaluacion = %s,
                     fecha_evaluacion = %s,
                     resultado = %s,
@@ -235,7 +235,7 @@ class EvaluacionesFinalesRepository:
 
             cursor.execute(query, (
                 evaluaciones_finales.id_practica,
-                evaluaciones_finales.id_evaluador,
+                evaluaciones_finales.id_tutor,
                 evaluaciones_finales.tipo_evaluacion,
                 evaluaciones_finales.fecha_evaluacion,
                 evaluaciones_finales.resultado,
