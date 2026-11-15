@@ -3,28 +3,12 @@ from app.models.evaluaciones_finales import EvaluacionesFinales
 from app.repositories.evaluaciones_finales_repo import EvaluacionesFinalesRepository
 
 
-router = APIRouter(
-    prefix="/evaluacionesfinales",
-    tags=["Gestión de evaluaciones finales"]
-)
-
+router = APIRouter( prefix="/evaluacionesfinales", tags=["Gestión de evaluaciones finales"])
 repo = EvaluacionesFinalesRepository()
-
-@router.get("/proximas")
-def listar_proximas_evaluaciones():
-    try:
-        return repo.obtener_proximas()
-
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
 
 @router.get("/")
 def listar_evaluaciones():
     return repo.obtener_todos()
-
 
 @router.get("/{id_evaluacion}")
 def obtener_evaluacion(id_evaluacion: int):
@@ -41,24 +25,13 @@ def obtener_evaluacion(id_evaluacion: int):
 
 @router.post("/", status_code=201)
 def crear_evaluacion(evaluacion: EvaluacionesFinales):
-    try:
-        nuevo_id = repo.crear(evaluacion)
+    nuevo_id = repo.crear(evaluacion)
 
-        return {
-            "mensaje": "Evaluación registrada exitosamente",
-            "id": nuevo_id
-        }
+    return {
+        "mensaje": "Evaluación registrada exitosamente",
+        "id": nuevo_id
+    }
 
-    except Exception as e:
-        raise HTTPException(
-            status_code=500,
-            detail=str(e)
-        )
-
-
-# ==========================================
-# ELIMINAR EVALUACIÓN
-# ==========================================
 @router.delete("/{id_evaluacion}")
 def eliminar_evaluacion(id_evaluacion: int):
     exito = repo.eliminar(id_evaluacion)
@@ -73,10 +46,6 @@ def eliminar_evaluacion(id_evaluacion: int):
         "mensaje": "Evaluación eliminada correctamente"
     }
 
-
-# ==========================================
-# ACTUALIZAR EVALUACIÓN
-# ==========================================
 @router.put("/{id_evaluacion}")
 def actualizar_evaluacion(
     id_evaluacion: int,
