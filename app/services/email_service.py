@@ -12,14 +12,18 @@ def enviar_email(
     contenido: str,
     archivos: list
 ):
-    smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com")
+    smtp_host = os.getenv("SMTP_HOST", "smtp.gmail.com").strip()
     smtp_port = int(os.getenv("SMTP_PORT", "587"))
-    smtp_user = os.getenv("SMTP_USER")
-    smtp_password = os.getenv("SMTP_PASSWORD")
 
+    smtp_user = os.getenv("SMTP_USER", "").strip()
+    smtp_password = os.getenv("SMTP_PASSWORD", "").strip()
+
+    # Verificar configuración
     if not smtp_user or not smtp_password:
         raise ValueError(
-            "No está configurada la cuenta Gmail en el servidor."
+            "Configuración SMTP incompleta. "
+            f"SMTP_USER configurado: {bool(smtp_user)}. "
+            f"SMTP_PASSWORD configurado: {bool(smtp_password)}."
         )
 
     mensaje = EmailMessage()
