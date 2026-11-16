@@ -245,7 +245,7 @@ def generar_pdf_postulaciones(datos):
 
     archivo.seek(0)
 
-    return archivos
+    return archivo
 
 
 # ==========================================
