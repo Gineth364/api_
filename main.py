@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from app.api import ruta_roles, ruta_usuario, ruta_tutores,ruta_estudiantes, ruta_roles, ruta_puestos_practicas, ruta_practicas, ruta_postulaciones, ruta_modulos, ruta_modulos_x_roles, ruta_seguimiento_practicas, ruta_evaluaciones_finales, ruta_bitacoras_practicas, ruta_empresas, ruta_login
+from app.api import ruta_roles, ruta_usuario, ruta_tutores,ruta_estudiantes, ruta_roles, ruta_puestos_practicas, ruta_practicas, ruta_postulaciones, ruta_modulos, ruta_modulos_x_roles, ruta_seguimiento_practicas, ruta_evaluaciones_finales, ruta_bitacoras_practicas,ruta_reportes, ruta_empresas, ruta_login
 from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI(title="API de Seguimiento de Prácticas Profesionales ",
@@ -27,6 +27,8 @@ app.include_router(ruta_seguimiento_practicas.router)
 app.include_router(ruta_evaluaciones_finales.router)
 app.include_router(ruta_bitacoras_practicas.router)
 app.include_router(ruta_empresas.router)
+app.include_router(ruta_reportes.router)
+
 
 app.include_router(ruta_login.router)
 
