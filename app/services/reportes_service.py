@@ -1,6 +1,5 @@
 
 import os
-import re
 import smtplib
 import ssl
 
@@ -28,10 +27,18 @@ router = APIRouter(
 repo = ReportesRepository()
 
 
+# ==========================================
+# MODELO PARA ENVÍO DE CORREO
+# ==========================================
+
 class EnviarReporteRequest(BaseModel):
     correo_destino: EmailStr
     formato: Literal["pdf", "excel", "ambos"]
 
+
+# ==========================================
+# VALIDACIONES Y CONSULTA
+# ==========================================
 
 def validar_fechas(fecha_inicio, fecha_fin):
     if fecha_inicio and fecha_fin and fecha_inicio > fecha_fin:
@@ -56,12 +63,17 @@ def obtener_datos_postulaciones(
             estado=estado,
             empresa=empresa
         )
-    except Exception as e:
+
+    except Exception:
         raise HTTPException(
             status_code=500,
-            detail=f"Error al obtener el reporte: {str(e)}"
+            detail="Error al obtener el reporte de postulaciones."
         )
 
+
+# ==========================================
+# ENVÍO DE CORREOS CON GMAIL
+# ==========================================
 
 def enviar_correo_reporte(destinatario, archivos):
 
@@ -73,7 +85,7 @@ def enviar_correo_reporte(destinatario, archivos):
     if not smtp_user or not smtp_password:
         raise HTTPException(
             status_code=500,
-            detail="La configuración de Gmail no está completa en el servidor."
+            detail="La configuración de Gmail no está completa en Render."
         )
 
     mensaje = EmailMessage()
@@ -106,7 +118,12 @@ Sistema UniPrácticas
     try:
         contexto = ssl.create_default_context()
 
-        with smtplib.SMTP(smtp_host, smtp_port, timeout=30) as servidor:
+        with smtplib.SMTP(
+            smtp_host,
+            smtp_port,
+            timeout=30
+        ) as servidor:
+
             servidor.ehlo()
             servidor.starttls(context=contexto)
             servidor.ehlo()
@@ -114,12 +131,16 @@ Sistema UniPrácticas
             servidor.login(smtp_user, smtp_password)
             servidor.send_message(mensaje)
 
-    except Exception as e:
+    except Exception:
         raise HTTPException(
             status_code=502,
             detail="No fue posible enviar el correo. Verifica la configuración de Gmail."
         )
 
+
+# ==========================================
+# CONSULTAR REPORTE
+# ==========================================
 
 @router.get("/postulaciones")
 def reporte_postulaciones(
@@ -130,7 +151,10 @@ def reporte_postulaciones(
 ):
 
     datos = obtener_datos_postulaciones(
-        fecha_inicio, fecha_fin, estado, empresa
+        fecha_inicio,
+        fecha_fin,
+        estado,
+        empresa
     )
 
     return {
@@ -138,6 +162,10 @@ def reporte_postulaciones(
         "datos": datos
     }
 
+
+# ==========================================
+# DESCARGAR PDF
+# ==========================================
 
 @router.get("/postulaciones/pdf")
 def descargar_pdf_postulaciones(
@@ -148,7 +176,10 @@ def descargar_pdf_postulaciones(
 ):
 
     datos = obtener_datos_postulaciones(
-        fecha_inicio, fecha_fin, estado, empresa
+        fecha_inicio,
+        fecha_fin,
+        estado,
+        empresa
     )
 
     try:
@@ -163,12 +194,16 @@ def descargar_pdf_postulaciones(
             }
         )
 
-    except Exception as e:
+    except Exception:
         raise HTTPException(
             status_code=500,
-            detail=f"Error al generar el PDF: {str(e)}"
+            detail="Error al generar el PDF."
         )
 
+
+# ==========================================
+# DESCARGAR EXCEL
+# ==========================================
 
 @router.get("/postulaciones/excel")
 def descargar_excel_postulaciones(
@@ -179,7 +214,10 @@ def descargar_excel_postulaciones(
 ):
 
     datos = obtener_datos_postulaciones(
-        fecha_inicio, fecha_fin, estado, empresa
+        fecha_inicio,
+        fecha_fin,
+        estado,
+        empresa
     )
 
     try:
@@ -197,12 +235,16 @@ def descargar_excel_postulaciones(
             }
         )
 
-    except Exception as e:
+    except Exception:
         raise HTTPException(
             status_code=500,
-            detail=f"Error al generar el Excel: {str(e)}"
+            detail="Error al generar el Excel."
         )
 
+
+# ==========================================
+# ENVIAR REPORTE POR CORREO
+# ==========================================
 
 @router.post("/postulaciones/enviar")
 def enviar_reporte_postulaciones(
@@ -213,18 +255,21 @@ def enviar_reporte_postulaciones(
     empresa: str = Query(None)
 ):
 
-    correo = str(solicitud.correo_destino)
-
     datos = obtener_datos_postulaciones(
-        fecha_inicio, fecha_fin, estado, empresa
+        fecha_inicio,
+        fecha_fin,
+        estado,
+        empresa
     )
 
     archivos = []
 
     try:
-        if solicitud.formato in ("pdf", "ambos"):
-            pdf = generar_pdf_postulaciones(datos)
 
+        # Generar PDF
+        if solicitud.formato in ("pdf", "ambos"):
+
+            pdf = generar_pdf_postulaciones(datos)
             pdf.seek(0)
 
             archivos.append((
@@ -233,9 +278,10 @@ def enviar_reporte_postulaciones(
                 "pdf"
             ))
 
+        # Generar Excel
         if solicitud.formato in ("excel", "ambos"):
-            excel = generar_excel_postulaciones(datos)
 
+            excel = generar_excel_postulaciones(datos)
             excel.seek(0)
 
             archivos.append((
@@ -244,11 +290,15 @@ def enviar_reporte_postulaciones(
                 "vnd.openxmlformats-officedocument.spreadsheetml.sheet"
             ))
 
-        enviar_correo_reporte(correo, archivos)
+        # Enviar archivos por Gmail
+        enviar_correo_reporte(
+            str(solicitud.correo_destino),
+            archivos
+        )
 
         return {
             "mensaje": "Reporte enviado correctamente.",
-            "destinatario": correo,
+            "destinatario": str(solicitud.correo_destino),
             "archivos_enviados": [
                 archivo[0] for archivo in archivos
             ],
@@ -261,5 +311,5 @@ def enviar_reporte_postulaciones(
     except Exception:
         raise HTTPException(
             status_code=500,
-            detail="Ocurrió un error al generar los archivos del correo."
+            detail="Ocurrió un error al generar o enviar los reportes."
         )
