@@ -20,11 +20,11 @@ def enviar_email(
 
     # Verificar configuración
     if not smtp_user or not smtp_password:
-        raise ValueError(
-            "Configuración SMTP incompleta. "
-            f"SMTP_USER configurado: {bool(smtp_user)}. "
-            f"SMTP_PASSWORD configurado: {bool(smtp_password)}."
-        )
+       raise ValueError(
+    "Configuración SMTP incompleta. "
+    f"SMTP_USER configurado: {bool(smtp_user)}. "
+    f"SMTP_PASSWORD configurado: {bool(smtp_password)}."
+)
 
     mensaje = EmailMessage()
 
