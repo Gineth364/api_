@@ -1,5 +1,6 @@
 from fastapi import APIRouter, HTTPException, Query
 from fastapi.responses import StreamingResponse
+from app.services.email_service import enviar_email
 from datetime import date
 
 from app.repositories.reportes_repo import ReportesRepository
